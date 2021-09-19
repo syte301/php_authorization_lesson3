@@ -2,6 +2,14 @@
 
 // session_start();
 
+function admin() {
+    $user = get_user_by_email($_SESSION['email']);
+    // var_dump($user);die;
+    if ($user['role'] == 'admin') {
+        return true;
+    }
+}
+
 function is_not_logged_in()
 {
     if (!isset($_SESSION['email']))
@@ -11,13 +19,10 @@ function is_not_logged_in()
 }
 
 function login($email, $password) {    //loggedIn()
-    $pdo = new PDO("mysql:host=localhost;dbname=db_auth", "root", "");
-
-    $sql =  "SELECT * FROM users WHERE email=:email";
     $user = get_user_by_email($email);
+    // var_dump($user);die; //здесь выводит логическое значение а нужно пользователя и пароль hash
 
     if (empty($user) or !(password_verify($password, $user['password']))) {
-    //if (empty($user)) {
         set_flash_message("danger","Такого пользователя не существует");
         // var_dump(set_flash_message());
         return false;
